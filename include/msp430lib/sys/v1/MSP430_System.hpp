@@ -1,6 +1,6 @@
 #pragma once
 
-#include "msp430lib/v1/ISys.hpp"
+#include "msp430lib/sys/v1/ISys.hpp"
 
 namespace msp430lib {
 inline namespace v1 {

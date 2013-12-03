@@ -1,5 +1,5 @@
-#include "MSP430_System.hpp"
-#include <msp430g2553.h>
+#include "msp430lib/sys/v1/MSP430_System.hpp"
+#include <msp430.h>
 
 #define USE_ASM_SPINNING    1
 //--------------------------------------------------------------------------------------------------
@@ -36,6 +36,10 @@ static void asmspin(uint32_t count){
 #endif
 
 //--------------------------------------------------------------------------------------------------
+
+namespace msp430lib {
+namespace v1 {
+
 void MSP430_System::delay_us(register uint16_t us) const {
   register volatile uint32_t count;
   register uint32_t tmp;
@@ -70,5 +74,8 @@ void MSP430_System::delay_us(register uint16_t us) const {
 
 void MSP430_System::init()
 {
+}
+
+}
 }
 
