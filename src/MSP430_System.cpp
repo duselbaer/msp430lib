@@ -1,6 +1,16 @@
 #include "msp430lib/sys/v1/MSP430_System.hpp"
 #include <msp430.h>
 
+namespace {
+  volatile uint32_t milliseconds_since_start = 0;
+}
+
+#pragma vector=TIMER0_A0_VECTOR
+__interrupt void systickTimerInterrupt(void)
+{
+  milliseconds_since_start++;
+}
+
 #define USE_ASM_SPINNING    1
 //--------------------------------------------------------------------------------------------------
 #if(USE_ASM_SPINNING == 1)
@@ -40,42 +50,40 @@ static void asmspin(uint32_t count){
 namespace msp430lib {
 namespace v1 {
 
-void MSP430_System::delay_us(register uint16_t us) const {
-  register volatile uint32_t count;
-  register uint32_t tmp;
-
-  // fast approximation of:
-  // count = (us*F_CPU)/(8*1000000)
-  count = us; //8
-
-  tmp = F_CPU >> 10; //76
-  tmp = tmp * count; // 102
-  tmp >>= 13; // 136
-  count = tmp; // 138
-  tmp >>= 5; // 156
-  count += tmp; // 158
-  tmp >>= 1; // 160
-  count += tmp; // 162
-
-#if(USE_ASM_SPINNING == 1)
-  if(count <= 31) return; //169
-  count = count - 31; //172; 172/8 = 21; adjusted to 31
-
-  asmspin(count);
-#else
-  if(count <= 25) return; //169
-  count = count - 25; //172; 172/8 = 21; adjusted to 25
-
-  while(count){ // 8 cyc per loop
-    count--;
+auto MSP430_System::delay_us(register uint16_t us) const -> void
+{
+  while (us--)
+  {
+    __delay_cycles( F_CPU / 1000000UL );
   }
-#endif
 }
 
 void MSP430_System::init()
 {
+  // Setup the Systick Timer
+  milliseconds_since_start = 0;
+
+  // TASSEL2 - SMCLK
+  // ID3 - DIVIDER 8
+  TA0CTL = TASSEL_2;
+  TA0CCTL0 = CCIE;
+  TA0CCR0  = F_CPU / 1000 / 2; /* Interrupt only once per period */
+  TA0CTL |= MC_3;
 }
 
+auto MSP430_System::millisecondsSinceStart() const -> uint32_t
+{
+  return milliseconds_since_start;
+}
+
+auto MSP430_System::delay_ms(register uint16_t ms) const -> void
+{
+  uint32_t wait_until = millisecondsSinceStart() + ms;
+  while (millisecondsSinceStart() < wait_until)
+  {
+    // TODO: POWER DOWN MODE?
+  }
+}
 }
 }
 

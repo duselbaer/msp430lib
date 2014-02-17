@@ -42,10 +42,11 @@ inline namespace v1 {
 
       // UCSSEL_3 - use MLCK
       // Keep RESET
-      IF::CTL1 = UCSSEL_3 + UCSWRST;
+      IF::CTL1 = UCSSEL_2 + UCSWRST;
 
       // No prescaler - use MCLK
-      IF::BR0 = 1;
+      // TODO: Make this configurable
+      IF::BR0 = 2;
       IF::BR1 = 0;
 
       // Clear RESET
@@ -57,14 +58,11 @@ inline namespace v1 {
     //! Sends a byte on the SPI and reads at the same time
     uint8_t shift_data(const uint8_t out)
     {
-      // Data written to UCxTXBUF when UCxTXIFG = 0 may result in erroneous data transmission.
-      while (!(IFG2 & UCB0TXIFG));
-
       // Move data to the output buffer
       IF::TXBUF = out;
 
-      // Wait for data to be sent
-      while (!(IFG2 & UCB0TXIFG));
+      // Wait for data to be received
+      while (!(IFG2 & UCB0RXIFG));
 
       // And return the read data
       return IF::RXBUF;

@@ -20,6 +20,9 @@ inline namespace v1 {
 
     //! \brief Sleep the given amount of microseconds
     virtual void delay_us(register uint16_t us) const = 0;
+
+    //! \brief Number of Milliseconds since start
+    virtual uint32_t millisecondsSinceStart() const = 0;
   };
 }
 }

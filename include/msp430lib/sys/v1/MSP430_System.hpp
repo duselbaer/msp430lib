@@ -13,8 +13,10 @@ inline namespace v1 {
   class MSP430_System : public ISys
   {
   public:
-    virtual void init() override;
-    virtual void delay_us(register uint16_t us) const override;
+    virtual auto init() override -> void;
+    virtual auto delay_us(register uint16_t us) const override -> void;
+    virtual auto delay_ms(register uint16_t ms) const -> void;
+    virtual auto millisecondsSinceStart() const override -> uint32_t;
   };
 }
 }
