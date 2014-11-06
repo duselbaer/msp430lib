@@ -19,7 +19,7 @@ add_definitions("-DF_CPU=${CONF_FREQUENCY_IN_HZ}")
 
 # MSP430Lib
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/msp430lib/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../include
 )
 add_subdirectory("../.." msp430lib)
 
