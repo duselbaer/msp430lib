@@ -1,3 +1,6 @@
 [submodule "examples/SerialCommunication/cmake"]
 	path = examples/SerialCommunication/cmake
 	url = https://github.com/duselbaer/msp430cmake.git
+[submodule "examples/ADC/cmake"]
+	path = examples/ADC/cmake
+	url = https://github.com/duselbaer/msp430cmake.git

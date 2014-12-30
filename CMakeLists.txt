@@ -6,4 +6,5 @@ add_library(
     src/MSP430_USCI_A0.cpp
     src/MSP430_USCI_B0.cpp
     src/MSP430_USCI_UART.cpp
+    src/ADC10.cpp
 )
