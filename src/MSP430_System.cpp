@@ -9,6 +9,7 @@ namespace {
 __interrupt void systickTimerInterrupt(void)
 {
   milliseconds_since_start++;
+  LPM1_EXIT;
 }
 
 #define USE_ASM_SPINNING    1
