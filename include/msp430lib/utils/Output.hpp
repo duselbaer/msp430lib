@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdio.h>
+
 namespace msp430lib {
 inline namespace v1 {
 
@@ -57,6 +59,16 @@ Output<D>& operator<<(Output<D>& os, uint8_t const byte)
   os.puts("0x");
   writeNibble(os, byte >> 4);
   writeNibble(os, byte);
+  return os;
+}
+
+template<typename D>
+Output<D>& operator<<(Output<D>& os, uint32_t const x)
+{
+  char buf[16];
+  sprintf(buf, "%lu", x);
+
+  os << buf;
   return os;
 }
 }
