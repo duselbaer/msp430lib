@@ -15,7 +15,7 @@ namespace msp430lib {
   {
     ADC10CTL0 = 0
       /* | ADC10SREF_0 */ // VR+ = Vcc, VR- = Vss
-      | ADC10SHT_0        // 4 x ADC10CLK
+      | ADC10SHT_3        // 64 x ADC10CLK
       | ADC10SR           // 50 ksps
       /* | REFOUT */      // REFOUT disabled
       | REFBURST          // Reference buffer only during sample and conversion
@@ -30,9 +30,9 @@ namespace msp430lib {
       |SHS_0               // ADC10SC bit starts conversion
       /* |ADC10DF */       // Straight binary
       /* |ISSH */          // Sample and Hold not inverted
-      | ADC10DIV_0         // ADC10 clock divider = 1
-      |ADC10SSEL_3         // SMCLK is source for ADC10
-      |CONSEQ_0            // Single Channel single conversion
+      | ADC10DIV_7         // ADC10 clock divider = 8
+      | ADC10SSEL_3        // SMCLK is source for ADC10
+      | CONSEQ_0           // Single Channel single conversion
     ;
 
     // Enable analog input
