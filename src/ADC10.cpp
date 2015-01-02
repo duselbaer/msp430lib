@@ -14,7 +14,7 @@ namespace msp430lib {
   ADC10::ADC10(uint8_t const channel)
   {
     ADC10CTL0 = 0
-      /* | ADC10SREF_0 */ // VR+ = Vcc, VR- = Vss
+      | SREF_1            // VREF
       | ADC10SHT_3        // 64 x ADC10CLK
       | ADC10SR           // 50 ksps
       /* | REFOUT */      // REFOUT disabled

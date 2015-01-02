@@ -5,6 +5,8 @@
 
 #include "msp430lib/utils/Output.hpp"
 
+#include <stdio.h>
+
 int main()
 {
   // Disable Watchdog, Setup Clock Module
@@ -27,6 +29,8 @@ int main()
 
   while (1)
   {
-    os << "VCC/2 = " << (uint32_t) adc.singleConversion() << "\n";
+    uint32_t temp = (adc.singleConversion() * 5); /* Vcc_2 * 2 * (2500/1024) is about Vcc_2 * 5 */
+
+    os << "VCC/2 = " << temp << " mV\n";
   }
 }
