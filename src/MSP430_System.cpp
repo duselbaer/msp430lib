@@ -61,14 +61,26 @@ auto MSP430_System::delay_us(register uint16_t us) const -> void
 
 void MSP430_System::init()
 {
+  // The internal very-low-power low-frequency oscillator (VLO) provides a typical frequency
+  // of 12 kHz (see device-specific data sheet for parameters) without requiring a crystal.
+  // VLOCLK source is selected by setting LFXT1Sx = 10 when XTS = 0. The OSCOFF bit disables
+  // the VLO for LPM4. The LFXT1 crystal oscillators are disabled when the VLO is selected
+  // reducing current consumption. The VLO consumes no power when not being used.
+  //
+  // Devices without LFXT1 (for example, the MSP430G22x0) should be configured to use
+  // the VLO as ACLK.
+  BCSCTL1 &= ~XTS;
+  BCSCTL3 &= ~LFXT1S_3;
+  BCSCTL3 |= LFXT1S_2;
+
   // Setup the Systick Timer
   milliseconds_since_start = 0;
 
   // TASSEL2 - SMCLK
   // ID3 - DIVIDER 8
-  TA0CTL = TASSEL_2;
+  TA0CTL = TASSEL_1 | ID_1 ; // SRC = ACLK / 2
   TA0CCTL0 = CCIE;
-  TA0CCR0  = F_CPU / 1000 / 2; /* Interrupt only once per period */
+  TA0CCR0  = 3; // count up to 3, then down, then IRQ - using ACLK / 2 this results in 1 kHz
   TA0CTL |= MC_3;
 }
 
@@ -82,7 +94,7 @@ auto MSP430_System::delay_ms(register uint16_t ms) const -> void
   uint32_t wait_until = millisecondsSinceStart() + ms;
   while (millisecondsSinceStart() < wait_until)
   {
-    // TODO: POWER DOWN MODE?
+    LPM3;
   }
 }
 }
